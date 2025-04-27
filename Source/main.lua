@@ -3,6 +3,7 @@ import "CoreLibs/graphics"
 import "CoreLibs/sprites"
 import "CoreLibs/timer"
 import "CoreLibs/animation"
+import "Explosion"
 
 local gfx <const> = playdate.graphics
 local snd <const> = playdate.sound
@@ -15,6 +16,8 @@ local fireworkY = math.random(55, 185)
 local fireworkAnimationLoop
 local frameTime = 200 
 local numFireworks = math.random(1, 6)
+
+local explosionSprite = nil 
 
 local synthPlayer = snd.synth.new(snd.kWaveTriangle) -- kWaveSquare
 
@@ -106,11 +109,11 @@ function gameSetup()
     
     local fireworksCount = math.random(0, 5)
     showFirework(fireworkX, fireworkY, fireworksCount)
+
     
-    -- fireworkSprite:setImage(fireworkImageTable[1]) 
-    -- fireworkSprite.update = nil 
-    
-    -- 
+    -- TODO: Check if Animator can be useful for changing the explosion's size
+    -- Also check once the animation is completed, then remove the sprite
+    explosionSprite = Explosion(200, 240, 20)
     
 end
 
