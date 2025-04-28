@@ -19,14 +19,11 @@ local numFireworks = math.random(1, 6)
 
 local explosionSprite = nil 
 
-local synthPlayer = snd.synth.new(snd.kWaveTriangle) -- kWaveSquare
 
+-- Play the background music MIDI 
 function playSouthernCross()
     
-    -- if laserSoundTimer ~= nil then
-    --     laserSoundTimer:remove()
-    -- end
-    
+    local synthPlayer = snd.synth.new(snd.kWaveTriangle) -- kWaveSquare
     local southernCross = snd.sequence.new('sounds/southern-cross.mid')
     assert(southernCross)
     
@@ -60,8 +57,6 @@ function playSouthernCross()
     southernCross:setTrackAtIndex(8, track8)
     southernCross:setTrackAtIndex(9, track9)
     
-    -- southernCross:setTempo(1200)
-    
     southernCross:play()
 end
 
@@ -74,10 +69,7 @@ function gameSetup()
     -- back to win again.  Is this randomization enough?
     math.randomseed(playdate.getSecondsSinceEpoch())
     
-    -- gfx.setColor(gfx.kColorBlack)
-    -- gfx.fillRect(0, 0, 400, 240)
-    
-    -- Why is nothing drawing?! -- Need to add gfx.sprite.update() 
+    -- Remember to add gfx.sprite.update(), otherwise this won't appear 
     -- Set up a background image
     local backgroundImage = gfx.image.new( "images/starry-night-background" )
     assert( backgroundImage )
@@ -97,11 +89,7 @@ function gameSetup()
     
     local fireworkImageTable = gfx.imagetable.new("images/firework") 
     assert(fireworkImageTable)
-    if (fireworkImageTable ~= nil) then
-        print("Good news! fireworkImageTable loaded:: " .. fireworkImageTable:getLength())
-    end
     
-    print("Trying to set the fireworkSprite")
     fireworkSprite = gfx.sprite.new(fireworkImageTable[1])
     fireworkSprite.update = nil
     
@@ -113,14 +101,12 @@ function gameSetup()
     
     -- TODO: Check if Animator can be useful for changing the explosion's size
     -- Also check once the animation is completed, then remove the sprite
-    explosionSprite = Explosion(200, 240, 20)
-    
+    -- explosionSprite = Explosion(200, 240, 20)
 end
 
 function showFirework(x, y, fireworksCount)
     print("Welcome to showFirework at location::: (" .. x .. ", " .. y .. ")")
     fireworkSprite.update = nil
-    
     
     -- Crash: attempt to index a nil value (field 'animation')
     -- Solution: Add the "CoreLibs/animation" library!
@@ -128,7 +114,6 @@ function showFirework(x, y, fireworksCount)
     -- local animationLoop = gfx.animation.loop.new(frameTime, fireworkImageTable, false)
     fireworkAnimationLoop  = gfx.animation.loop.new(frameTime, fireworkImageTable, false)
     assert( fireworkAnimationLoop )
-    print( "fireworkAnimationLoop is OK, hopefully")
     
     fireworkSprite.update = function()
         fireworkSprite:setImage(fireworkAnimationLoop:image())
@@ -142,6 +127,10 @@ function showFirework(x, y, fireworksCount)
                 local deltaY = math.random(-20, 20)
                 print("delta values:: (" .. deltaX .. ", " .. deltaY .. ")")
                 showFirework(x+deltaX, y+deltaY, fireworksCount-1)
+            else
+                randomizeSpriteLocation()
+                local fireworksCount = math.random(0, 5)
+                showFirework(fireworkX, fireworkY, fireworksCount)
             end 
         end
     end
@@ -158,27 +147,14 @@ end
 gameSetup()
 
 function playdate.update()
-    -- gfx.fillRect(0, 0, 400, 240)
+    
     playdate.drawFPS(0,0)
     
     gfx.sprite.update()
     playdate.timer.updateTimers()
     
-    -- if playdate.buttonIsPressed( playdate.kButtonUp ) then
-    --     fireworkSprite:moveBy( 0, -2 )
-    -- end
-    -- if playdate.buttonIsPressed( playdate.kButtonRight ) then
-    --     fireworkSprite:moveBy( 2, 0 )
-    -- end
-    -- if playdate.buttonIsPressed( playdate.kButtonDown ) then
-    --     fireworkSprite:moveBy( 0, 2 )
-    -- end
-    -- if playdate.buttonIsPressed( playdate.kButtonLeft ) then
-    --     fireworkSprite:moveBy( -2, 0 )
-    -- end
     if playdate.buttonJustPressed( playdate.kButtonA ) then
         randomizeSpriteLocation()
         showFirework(fireworkX, fireworkY, math.random(0, 5))
-        -- fireworkSprite:moveTo(fireworkX, fireworkY)
     end
 end
