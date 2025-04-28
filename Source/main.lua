@@ -111,7 +111,6 @@ function showFirework(x, y, fireworksCount)
     -- Crash: attempt to index a nil value (field 'animation')
     -- Solution: Add the "CoreLibs/animation" library!
     -- Source: https://devforum.play.date/t/animation-loop-throwing-an-error/6385
-    -- local animationLoop = gfx.animation.loop.new(frameTime, fireworkImageTable, false)
     fireworkAnimationLoop  = gfx.animation.loop.new(frameTime, fireworkImageTable, false)
     assert( fireworkAnimationLoop )
     
