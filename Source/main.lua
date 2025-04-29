@@ -73,7 +73,7 @@ function gameSetup()
     -- Set up a background image
     local backgroundImage = gfx.image.new( "images/starry-night-background" )
     assert( backgroundImage )
-    -- gfx.setImageDrawMode(gfx.kDrawModeWhiteTransparent)
+    
     gfx.sprite.setBackgroundDrawingCallback(
         function( x, y, width, height )
             -- x,y,width,height is the updated area in sprite-local coordinates
@@ -93,12 +93,9 @@ function gameSetup()
     fireworkSprite = gfx.sprite.new(fireworkImageTable[1])
     fireworkSprite.update = nil
     
-    print("Initial coordinates:: (" .. fireworkX .. ", " .. fireworkY .. ")")
-    
     local fireworksCount = math.random(0, 5)
     showFirework(fireworkX, fireworkY, fireworksCount)
 
-    
     -- TODO: Check if Animator can be useful for changing the explosion's size
     -- Also check once the animation is completed, then remove the sprite
     -- explosionSprite = Explosion(200, 240, 20)
@@ -112,19 +109,20 @@ function showFirework(x, y, fireworksCount)
     -- Solution: Add the "CoreLibs/animation" library!
     -- Source: https://devforum.play.date/t/animation-loop-throwing-an-error/6385
     fireworkAnimationLoop  = gfx.animation.loop.new(frameTime, fireworkImageTable, false)
-    assert( fireworkAnimationLoop )
+    assert(fireworkAnimationLoop)
     
     fireworkSprite.update = function()
         fireworkSprite:setImage(fireworkAnimationLoop:image())
         
         if not fireworkAnimationLoop:isValid() then
-            print("The sprite animation is ending")
+            
             fireworkSprite:remove()
+            
             if (fireworksCount > 0) then
                 -- Create some deltas for x and y
                 local deltaX = math.random(-20, 20)
                 local deltaY = math.random(-20, 20)
-                print("delta values:: (" .. deltaX .. ", " .. deltaY .. ")")
+
                 showFirework(x+deltaX, y+deltaY, fireworksCount-1)
             else
                 randomizeSpriteLocation()
@@ -134,7 +132,7 @@ function showFirework(x, y, fireworksCount)
         end
     end
     
-    fireworkSprite:moveTo(x, y) -- 200, 120
+    fireworkSprite:moveTo(x, y)
     fireworkSprite:add()
 end
 
