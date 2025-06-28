@@ -9,7 +9,10 @@ local gfx <const> = playdate.graphics
 local snd <const> = playdate.sound
 
 local fireworkSprite = nil
+local fireworkImage = gfx.image.new("images/defaultFirework")
 local fireworkImageTable = gfx.imagetable.new("images/firework") 
+
+
 local fireworkX = math.random(55, 345)
 local fireworkY = math.random(55, 185)
 
@@ -84,22 +87,36 @@ function gameSetup()
     
     playSouthernCross()
     
-    local fireworkImage = gfx.image.new("images/defaultFirework")
+    -- Verify that the images and table exist
     assert(fireworkImage)
-    
-    local fireworkImageTable = gfx.imagetable.new("images/firework") 
     assert(fireworkImageTable)
     
+    showExplosion()
+    
+    -- TODO: Check if Animator can be useful for changing the explosion's size
+    -- Also check once the animation is completed, then remove the sprite
+end
+
+function showExplosion()
+    local explosionX = math.random(60, 340)
+    explosionSprite = Explosion(explosionX, 240, 10)
+end
+
+function explosionEnded()
+    print("Boom boom")
+    explosionSprite:remove()
+    -- showExplosion()
+    startFireworks()
+end
+
+function startFireworks()
     fireworkSprite = gfx.sprite.new(fireworkImageTable[1])
     fireworkSprite.update = nil
     
     local fireworksCount = math.random(0, 5)
+    randomizeSpriteLocation()
     showFirework(fireworkX, fireworkY, fireworksCount)
-
-    -- TODO: Check if Animator can be useful for changing the explosion's size
-    -- Also check once the animation is completed, then remove the sprite
-    -- explosionSprite = Explosion(200, 240, 20)
-end
+end 
 
 function showFirework(x, y, fireworksCount)
     print("Welcome to showFirework at location::: (" .. x .. ", " .. y .. ")")
@@ -125,9 +142,10 @@ function showFirework(x, y, fireworksCount)
 
                 showFirework(x+deltaX, y+deltaY, fireworksCount-1)
             else
-                randomizeSpriteLocation()
-                local fireworksCount = math.random(0, 5)
-                showFirework(fireworkX, fireworkY, fireworksCount)
+                showExplosion()
+                -- randomizeSpriteLocation()
+                -- local fireworksCount = math.random(0, 5)
+                -- showFirework(fireworkX, fireworkY, fireworksCount)
             end 
         end
     end
@@ -147,8 +165,12 @@ function playdate.update()
     
     playdate.drawFPS(0,0)
     
-    gfx.sprite.update()
+    gfx.sprite.update() -- update all sprites
     playdate.timer.updateTimers()
+    
+    if explosionSprite ~= nil then
+        explosionSprite:markDirty()
+    end
     
     if playdate.buttonJustPressed( playdate.kButtonA ) then
         randomizeSpriteLocation()

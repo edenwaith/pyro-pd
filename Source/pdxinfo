@@ -2,6 +2,6 @@ name=Pyro PD
 author=Chad Armstrong
 description=A recreation of the classic Macintosh Pyro! screensaver for the Playdate.
 bundleID=com.edenwaith.pyro-pd
-version=0.9
+version=0.9.5
 buildNumber=90
 imagePath=SystemAssets
