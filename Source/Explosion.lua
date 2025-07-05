@@ -37,7 +37,7 @@ function Explosion:init(x, y, r)
 end
 
 function Explosion:update()
-	print("Sprite radius:: " .. self.spriteRadius)
+	-- print("Sprite radius:: " .. self.spriteRadius)
 	-- print("Explosion is updating:: with scaleTimer value: " .. self.scaleTimer.value .. " and radius " .. self.radius)
 	
 	
@@ -53,7 +53,7 @@ function Explosion:update()
 end
 
 function Explosion:draw()
-	print("Explosion draw function::")
+	
 	local spriteWidth, spriteHeight = self:getSize()
 	if not self.radius then
 		self.radius = 0
